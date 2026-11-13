@@ -7,8 +7,8 @@ Assume nothing about the mod when it is not installed: check `logs\rqmod.log` fo
 ## What it adds
 
 - **Controls:** no buttons and no `rq.agent.control` ids. Do not invent controls for it.
-- **Config → Mods → Skill Removal Payback:** one checkbox, `full` ("Full value for starting
-  skills"), kept in the profile's `rq.store`.
+- **Config → Mods → Skill Removal Payback:** two checkboxes, kept in the profile's `rq.store`:
+  `full` ("Full value for starting skills") and `kept` ("Points back for kept Boosts", 1.1.0).
 - **Log:** each paid-back ERASE writes `Skill Removal Payback: skill <n> of character <iic>: <points>
   point(s) back (<how>; starting part <n>)`.
 
@@ -19,6 +19,10 @@ Assume nothing about the mod when it is not installed: check `logs\rqmod.log` fo
 3. ERASE it (`forget-N`, then Yes twice). The free points are back to where they were in step 1.
    Without the mod they stay lower.
 4. ERASE a skill the character started with: 1 point comes back (with `full` on, its price).
+5. In the third world only (`rq.world.current() == 3`): raise a Boost (Attack Boost, 277) to rank
+   4 and ERASE it. Nothing comes back, the log says `a Boost whose effect stays`, and the Attack
+   stays raised (`rq.chara.boosts` lists it `kept`). With `kept` on, its cost comes back. A Boost
+   below rank 4 pays back as any skill.
 
 ## Forcing it for a test
 
@@ -27,7 +31,12 @@ To look like a purchase made before the record existed, raise a row's most uses 
 `rq.ain.set_global("Ｃ", iic, "スキル", row, "使用回数最大", n)` and set its `コスト` to 0. Work on a
 copy of the save.
 
+`rq.mod.get("skill-removal-payback")` returns `payback(ctx)` (the points an `on_forget` ctx would
+give back) and `settings` (`get`, `set`). For a kept Boost outside the third
+world, the Lab sets `rq.ain.set_global("◆ワールド", 3)` and puts the world back after.
+
 ## Test Lab
 
 `skill-payback` (with this mod installed): the window's ERASE of a bought skill, an upgraded one,
-an older purchase, a starting skill with `full` off and on, and a mod's gift.
+an older purchase, a starting skill with `full` off and on, and a mod's gift. `loadouts-paths`
+(with Loadouts too): a kept Boost's ERASE with `kept` off and on, and a Boost below rank 4.

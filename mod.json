@@ -3,7 +3,7 @@
   "id": "skill-removal-payback",
   "name": "Skill Removal Payback",
   "author": "Moru Zerinho6",
-  "version": "1.0.0",
-  "loader": "2.45.0",
+  "version": "1.1.0",
+  "loader": "2.48.0",
   "priority": 0
 }

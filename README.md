@@ -14,6 +14,12 @@ build no longer wastes points.
   on, it gives back what the game would charge for it, or still 1 when the game does not sell that
   skill to that character.
 - **A skill another mod gave** gives nothing back.
+- **A Boost whose effect stays** gives nothing back by default. In the third world, a Boost raised
+  to rank 4 (Stamina, Attack, Magic, Accuracy, Evasion, Critical, Resilience and Stun Boost, and the
+  second Stamina, Attack and Magic Boost) keeps its effect after an ERASE, until the character's
+  skills are reset (Morurun's reset, Skill Again), so erasing it wastes nothing. With **Points back
+  for kept Boosts** on, it gives back what it cost, as any other skill. In the other worlds the
+  effect goes with the skill, and the Boost pays back as any other skill.
 - Only the skill window's ERASE pays back. Morurun's reset already gives every point back, and the
   skills the story takes away give nothing, as before.
 
@@ -24,8 +30,8 @@ giving extra points), and a starting skill you erased and bought again looks lik
 
 ## Keys and settings
 
-- **Config → Mods → Skill Removal Payback**: **Full value for starting skills** (off by default).
-  The setting is kept in the save profile.
+- **Config → Mods → Skill Removal Payback**: **Full value for starting skills** and **Points back
+  for kept Boosts** (both off by default). The settings are kept in the save profile.
 
 ## Saves
 
@@ -34,14 +40,14 @@ The setting is kept in `rqmod-store.json` in the save profile; the game ignores 
 
 ## Install
 
-Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **2.45.0** or newer. Extract the
+Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **2.48.0** or newer. Extract the
 release zip into the game's `mods` folder, so that you have `mods/skill-removal-payback/mod.json`.
 
 ## How it works
 
 `rq.chara.on_forget` runs before the game empties the skill's row; for the ERASE button (the game's
 `キャラスキル_消去`) the mod returns the points, and the loader adds them to the character. The
-record is `on_forget`'s `cost`; older purchases use `rq.chara.base_skills` (the starting skills, as
+record is `on_forget`'s `cost`, and its `kept` tells a Boost whose effect stays; older purchases use `rq.chara.base_skills` (the starting skills, as
 Morurun's reset rebuilds them), `rq.chara.price` and `rq.chara.skill_points_max`.
 
 ## License

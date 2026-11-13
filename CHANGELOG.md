@@ -3,6 +3,14 @@
 Each section is a version of the mod, the `version` in `mod.json`. The release workflow copies the
 section of a tagged version into the release notes.
 
+## 1.1.0
+
+- A Boost whose effect stays gives nothing back: in the third world, a Boost raised to rank 4
+  keeps its effect after an ERASE until the character's skills are reset, so its points were not
+  wasted (`rq.chara.on_forget`'s `kept`, loader 2.48.0). Config's new "Points back for kept Boosts"
+  gives its cost back as any other skill. A Boost below rank 4, or in another world, pays back as
+  before.
+
 ## 1.0.0
 
 First version.

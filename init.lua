@@ -9,6 +9,9 @@
 --   the starting part  1 point for a skill the character starts with; with "Full value" on, what the
 --                      game would charge for its starting level (1 when the game does not sell it)
 --   a mod's gift       nothing (the record is -1)
+--   a kept Boost       nothing, unless "Points back for kept Boosts" is on: a Boost at rank 4 whose
+--                      effect the game keeps after the ERASE (the third world; rq.chara.on_forget's
+--                      kept, loader 2.48.0) was not wasted
 -- Only the skill window's ERASE (キャラスキル_消去): Morurun's reset already gives every point back,
 -- and the game's own removals in the story give nothing.
 
@@ -25,9 +28,14 @@ local settings = rq.config.settings{
         "Off: a skill the character started with gives back 1 point.",
         "On: what the game would charge for it, or 1 when the game does not sell it.",
       } },
+    { kind = "checkbox", key = "kept", label = "Points back for kept Boosts", default = false,
+      note = {
+        "Off: erasing a Boost whose effect the game keeps (one at its top rank, in the third world) gives nothing back.",
+        "On: it gives back what it cost, as any other skill.",
+      } },
     { kind = "space", h = 8 },
     { kind = "label", dim = true, size = 15,
-      text = "Bought skills always give back what they cost." },
+      text = "Other bought skills always give back what they cost." },
   },
 }
 
@@ -52,6 +60,7 @@ end
 -- The points one ERASE gives back, and a line for the log.
 local function payback(ctx)
   local iic, skill = ctx.iic, ctx.skill
+  if ctx.kept and not settings.get("kept") then return 0, "a Boost whose effect stays", 0 end
   local now = level(iic, ctx)
   local base = math.min(start_level(iic, skill), now)
   local bought, how = 0, "nothing bought"
