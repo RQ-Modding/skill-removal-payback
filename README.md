@@ -20,12 +20,13 @@ build no longer wastes points.
   skills are reset (Morurun's reset, Skill Again), so erasing it wastes nothing. With **Points back
   for kept Boosts** on, it gives back what it cost, as any other skill. In the other worlds the
   effect goes with the skill, and the Boost pays back as any other skill.
-- **A load in [Loadouts](https://github.com/RQ-Modding/loadouts)** (1.2.0 or newer) pays back the
-  skills it erases as ERASE would: the skills it learns on the way and erases after, and the
-  starting skills the build lacks. Loadouts shows the points that come back before you load, so
-  switching between builds costs only the builds.
+- **Another mod erasing a skill for you** pays back as ERASE would, when that mod says the erasure
+  is yours (RQ MOD 2.51.0). A load in [Loadouts](https://github.com/RQ-Modding/loadouts) (1.2.0 or
+  newer) does: the skills it learns on the way and erases after, and the starting skills the build
+  lacks. Loadouts shows the points that come back before you load, so switching between builds
+  costs only the builds.
 - Only these erasures pay back. Morurun's reset already gives every point back, and the skills the
-  story takes away, or another mod removes, give nothing, as before.
+  story takes away, or a mod removes for its own reasons, give nothing, as before.
 - **A starting skill you erased and bought again** gives back what you paid for it the second
   time, which already includes its starting level.
 
@@ -46,18 +47,17 @@ The setting is kept in `rqmod-store.json` in the save profile; the game ignores 
 
 ## Install
 
-Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **2.48.0** or newer. Extract the
+Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **2.51.0** or newer. Extract the
 release zip into the game's `mods` folder, so that you have `mods/skill-removal-payback/mod.json`.
 
 ## How it works
 
-`rq.chara.on_forget` runs before the game empties the skill's row; for the ERASE button (the game's
-`キャラスキル_消去`) the mod returns the points, and the loader adds them to the character. The
+`rq.chara.on_forget` runs before the game empties the skill's row; for an erasure the player
+chose (its `player`: the ERASE button, the game's `キャラスキル_消去`, or a mod's `rq.chara.forget`
+with `player = true`) the mod returns the points, and the loader adds them to the character. The
 record is `on_forget`'s `cost`, and its `kept` tells a Boost whose effect stays; older purchases
 use `rq.chara.base_skills` (the starting skills, as Morurun's reset rebuilds them),
-`rq.chara.price` and `rq.chara.skill_points_max`. Another mod erases for the player through the
-mod's `erase` (`rq.mod.get("skill-removal-payback")`), which calls `rq.chara.forget` and answers
-that one erasure as it answers ERASE.
+`rq.chara.price` and `rq.chara.skill_points_max`.
 
 ## License
 

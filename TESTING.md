@@ -10,8 +10,8 @@ Assume nothing about the mod when it is not installed: check `logs\rqmod.log` fo
 - **Config → Mods → Skill Removal Payback:** two checkboxes, kept in the profile's `rq.store`:
   `full` ("Full value for starting skills") and `kept` ("Points back for kept Boosts", 1.1.0).
 - **Log:** each paid-back ERASE writes `Skill Removal Payback: skill <n> of character <iic>: <points>
-  point(s) back (<how>; starting part <n>)`; an erasure through `erase` (a load in Loadouts) adds
-  `, erased by a mod for the player`. A starting skill bought again says `bought again from
+  point(s) back (<how>; starting part <n>)`; a mod's erasure for the player (a load in Loadouts)
+  adds `, erased by <mod id> for the player`. A starting skill bought again says `bought again from
   nothing` and has starting part 0.
 
 ## How to check it
@@ -41,9 +41,9 @@ copy of the save.
 `rq.mod.get("skill-removal-payback")` returns:
 - `payback(ctx)`: the points an `on_forget` ctx would give back (`n` for a level the row does not
   have yet),
-- `erase(iic, skill)`: erases as the window's ERASE does, with the points back; returns whether the
-  character had the skill and the points (1.2.0). It raises an error for arguments that are not
-  whole numbers. `rq.chara.forget` alone gives nothing back.
+- `answers_player`: true from 1.2.0, when `rq.chara.forget(iic, skill, { player = true })` gets the
+  points back (its third value) and `payback` takes `n`. A plain `rq.chara.forget` gives nothing
+  back.
 - `settings` (`get`, `set`).
 
 For a kept Boost outside the third world, the Lab sets `rq.ain.set_global("◆ワールド", 3)` and puts
@@ -53,5 +53,5 @@ the world back after.
 
 `skill-payback` (with this mod installed): the window's ERASE of a bought skill, an upgraded one,
 an older purchase, a starting skill with `full` off and on, a starting skill bought again, a mod's
-gift, and `erase`. `loadouts-paths` (with Loadouts too): what a load's erasures give back, a kept
+gift, and `rq.chara.forget` with and without `player`. `loadouts-paths` (with Loadouts too): what a load's erasures give back, a kept
 Boost's ERASE with `kept` off and on, and a Boost below rank 4.

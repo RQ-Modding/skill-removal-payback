@@ -14,9 +14,10 @@
 --                      kept, loader 2.48.0) was not wasted
 -- A starting skill erased and bought again has a record that holds its starting steps too: no
 -- starting part on top (1.2.0; before, each such round gave 1 point more than it cost).
--- Only the skill window's ERASE (キャラスキル_消去), and a mod's erasures for the player through
--- this mod's erase (Loadouts, when it loads a build: 1.2.0). Morurun's reset already gives every
--- point back, the game's own removals in the story give nothing, and so does rq.chara.forget.
+-- Only the erasures the player chose (rq.chara.on_forget's player, loader 2.51.0): the skill
+-- window's ERASE (キャラスキル_消去) and a mod's rq.chara.forget with player = true (Loadouts, when
+-- it loads a build). Morurun's reset already gives every point back, the game's own removals in the
+-- story give nothing, and so does a mod's own rq.chara.forget (onoha-qol's head start).
 
 local MOD = "Skill Removal Payback"
 local ERASE = "キャラスキル_消去"
@@ -97,49 +98,30 @@ local function payback(ctx)
   return bought + start, how, start
 end
 
--- The erasure erase() makes, while it runs: { iic, skill, back }.
-local as_player = nil
-
 rq.chara.on_forget(function(ctx)
-  local mine = as_player ~= nil and ctx.caller == "lua" and ctx.iic == as_player.iic
-    and ctx.skill == as_player.skill
-  if ctx.caller ~= ERASE and not mine then return nil end
+  if not ctx.player then return nil end
   local ok, back, how, start = pcall(payback, ctx)
   if not ok then
     rq.log(MOD .. ": " .. tostring(back))
     return nil
   end
+  local by = ""
+  if ctx.caller ~= ERASE then by = (", erased by %s for the player"):format(ctx.mod or "a mod") end
   rq.log(("%s: skill %d of character %d: %d point(s) back (%s; starting part %d)%s"):format(
-    MOD, ctx.skill, ctx.iic, back, how, start, mine and ", erased by a mod for the player" or ""))
-  if mine then as_player.back = back end
+    MOD, ctx.skill, ctx.iic, back, how, start, by))
   return back
 end)
-
--- Erases a skill as the skill window's ERASE does, with its points back: for a mod that erases for
--- the player, as Loadouts does when it loads a build. Returns whether the character had the skill
--- and the points given back.
-local function erase(iic, skill)
-  if math.type(iic) ~= "integer" or math.type(skill) ~= "integer" then
-    error("skill-removal-payback: erase(iic, skill) takes two whole numbers", 2)
-  end
-  if as_player then error("skill-removal-payback: erase is already running", 2) end
-  as_player = { iic = iic, skill = skill, back = 0 }
-  local ok, removed = pcall(rq.chara.forget, iic, skill)
-  local back = as_player.back
-  as_player = nil
-  if not ok then error(removed, 2) end
-  return removed == true, removed == true and back or 0
-end
 
 rq.log(MOD .. " loaded")
 
 -- For tests and other mods (rq.mod.get("skill-removal-payback")):
 --   settings          the Config page's settings
---   payback(ctx)      what an ERASE of a row would give back (ctx as rq.chara.on_forget's: iic,
+--   payback(ctx)      what an erasure of a row would give back (ctx as rq.chara.on_forget's: iic,
 --                     skill, slot, rank, cost, kept; n for a level the row does not have yet)
---   erase(iic, skill) erases as the skill window's ERASE does, with the points back (1.2.0)
+--   answers_player    true (1.2.0): rq.chara.forget with player = true gets the points back, and
+--                     payback takes n
 return {
   settings = settings,
   payback = function(ctx) return (payback(ctx)) end,
-  erase = erase,
+  answers_player = true,
 }

@@ -5,15 +5,18 @@ section of a tagged version into the release notes.
 
 ## 1.2.0
 
-- A load in Loadouts (1.2.0 or newer) gives points back for the skills it erases, as the skill
-  window's ERASE would: the skills it learns on the way and erases after, and the starting skills
-  the build lacks. Switching builds costs only the builds themselves. The mod's new `erase(iic,
-  skill)` (`rq.mod.get("skill-removal-payback")`) is that erasure for any mod that erases for the
-  player; `rq.chara.forget` alone still gives nothing.
+- Every erasure the player chose gives points back, not only the skill window's ERASE: a mod that
+  erases for the player says so with `rq.chara.forget(iic, skill, { player = true })` (loader
+  2.51.0, `rq.chara.on_forget`'s `player`). A load in Loadouts (1.2.0 or newer) does: the skills
+  it learns on the way and erases after, and the starting skills the build lacks, give back as
+  ERASE would, so switching builds costs only the builds themselves. A mod's own removals (a plain
+  `rq.chara.forget`, as onoha-qol's head start) still give nothing.
 - A starting skill erased and bought again gives back what it cost, no more: its purchase record
   holds the starting steps too, so the 1 point (or the "Full value" price) is no longer added on
   top. Before, each such round gave a point more than it cost.
-- `payback(ctx)` takes `n`, the level of a row that is not there yet (for a plan's price).
+- `payback(ctx)` takes `n`, the level of a row that is not there yet (for a plan's price), and
+  `answers_player` (true) tells another mod that this version answers those erasures.
+- Needs loader 2.51.0.
 
 ## 1.1.0
 
