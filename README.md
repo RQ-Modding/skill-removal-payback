@@ -21,8 +21,7 @@ build no longer wastes points.
   for kept Boosts** on, it gives back what it cost, as any other skill. In the other worlds the
   effect goes with the skill, and the Boost pays back as any other skill.
 - **Another mod erasing a skill for you** pays back as ERASE would, when that mod says the erasure
-  is yours (RQ MOD 2.51.0). A load in [Loadouts](https://github.com/RQ-Modding/loadouts) (1.2.0 or
-  newer) does: the skills it learns on the way and erases after, and the starting skills the build
+  is yours (RQ MOD 2.51.0). A load in [Loadouts](https://github.com/RQ-Modding/loadouts) does: the skills it learns on the way and erases after, and the starting skills the build
   lacks. Loadouts shows the points that come back before you load, so switching between builds
   costs only the builds.
 - Only these erasures pay back. Morurun's reset already gives every point back, and the skills the
@@ -47,14 +46,16 @@ The setting is kept in `rqmod-store.json` in the save profile; the game ignores 
 
 ## Install
 
-Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **2.51.0** or newer. Extract the
+Needs [RQ MOD](https://github.com/RQ-Modding/RQ-Mod) with loader **2.52.0** or newer. Extract the
 release zip into the game's `mods` folder, so that you have `mods/skill-removal-payback/mod.json`.
 
 ## How it works
 
 `rq.chara.on_forget` runs before the game empties the skill's row; for an erasure the player
 chose (its `player`: the ERASE button, the game's `キャラスキル_消去`, or a mod's `rq.chara.forget`
-with `player = true`) the mod returns the points, and the loader adds them to the character. The
+with `player = true`) the mod returns the points, and the loader adds them to the character.
+`rq.chara.forget_points` asks the same before an erasure (`preview`), and the mod answers it the
+same way, so another mod can show the price of a change that erases skills. The
 record is `on_forget`'s `cost`, and its `kept` tells a Boost whose effect stays; older purchases
 use `rq.chara.base_skills` (the starting skills, as Morurun's reset rebuilds them),
 `rq.chara.price` and `rq.chara.skill_points_max`.

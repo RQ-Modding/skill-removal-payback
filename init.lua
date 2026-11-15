@@ -18,6 +18,8 @@
 -- window's ERASE (キャラスキル_消去) and a mod's rq.chara.forget with player = true (Loadouts, when
 -- it loads a build). Morurun's reset already gives every point back, the game's own removals in the
 -- story give nothing, and so does a mod's own rq.chara.forget (onoha-qol's head start).
+-- rq.chara.forget_points (loader 2.52.0) asks the same question before an erasure (ctx.preview):
+-- the same answer, with no log line (Loadouts' price of a load).
 
 local MOD = "Skill Removal Payback"
 local ERASE = "キャラスキル_消去"
@@ -105,6 +107,7 @@ rq.chara.on_forget(function(ctx)
     rq.log(MOD .. ": " .. tostring(back))
     return nil
   end
+  if ctx.preview then return back end
   local by = ""
   if ctx.caller ~= ERASE then by = (", erased by %s for the player"):format(ctx.mod or "a mod") end
   rq.log(("%s: skill %d of character %d: %d point(s) back (%s; starting part %d)%s"):format(
@@ -112,16 +115,29 @@ rq.chara.on_forget(function(ctx)
   return back
 end)
 
+-- Erases a skill as the player's erasure, with its points back: Loadouts 1.2.0 calls it (1.2.0).
+-- A mod written now calls rq.chara.forget(iic, skill, { player = true }) itself.
+local function erase(iic, skill)
+  if math.type(iic) ~= "integer" or math.type(skill) ~= "integer" then
+    error("skill-removal-payback: erase(iic, skill) takes two whole numbers", 2)
+  end
+  local removed, _, back = rq.chara.forget(iic, skill, { player = true })
+  return removed == true, removed == true and back or 0
+end
+
 rq.log(MOD .. " loaded")
 
 -- For tests and other mods (rq.mod.get("skill-removal-payback")):
 --   settings          the Config page's settings
 --   payback(ctx)      what an erasure of a row would give back (ctx as rq.chara.on_forget's: iic,
---                     skill, slot, rank, cost, kept; n for a level the row does not have yet)
---   answers_player    true (1.2.0): rq.chara.forget with player = true gets the points back, and
---                     payback takes n
+--                     skill, slot, rank, n, cost, kept)
+--   answers_player    true (1.2.0): rq.chara.forget with player = true gets the points back
+--   erase(iic, skill) rq.chara.forget with player, returning whether it was there and the points
+--                     back (1.2.0, kept for Loadouts 1.2.0)
+-- Another mod asks what an erasure would give with rq.chara.forget_points (loader 2.52.0).
 return {
   settings = settings,
   payback = function(ctx) return (payback(ctx)) end,
   answers_player = true,
+  erase = erase,
 }

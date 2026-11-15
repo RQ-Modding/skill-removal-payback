@@ -11,7 +11,8 @@ Assume nothing about the mod when it is not installed: check `logs\rqmod.log` fo
   `full` ("Full value for starting skills") and `kept` ("Points back for kept Boosts", 1.1.0).
 - **Log:** each paid-back ERASE writes `Skill Removal Payback: skill <n> of character <iic>: <points>
   point(s) back (<how>; starting part <n>)`; a mod's erasure for the player (a load in Loadouts)
-  adds `, erased by <mod id> for the player`. A starting skill bought again says `bought again from
+  adds `, erased by <mod id> for the player`. A question from `rq.chara.forget_points` (a plan's
+  price in Loadouts) writes no line. A starting skill bought again says `bought again from
   nothing` and has starting part 0.
 
 ## How to check it
@@ -44,6 +45,12 @@ copy of the save.
 - `answers_player`: true from 1.2.0, when `rq.chara.forget(iic, skill, { player = true })` gets the
   points back (its third value) and `payback` takes `n`. A plain `rq.chara.forget` gives nothing
   back.
+- `erase(iic, skill)`: `rq.chara.forget` with `player`; returns whether the character had the skill
+  and the points back. Kept for Loadouts 1.2.0.
+
+`rq.chara.forget_points(iic, skill, { player = true })` (loader 2.52.0) gives what the mod would
+give back for that erasure now, with nothing erased; `n`, `cost` and `kept` ask about the row as it
+would be.
 - `settings` (`get`, `set`).
 
 For a kept Boost outside the third world, the Lab sets `rq.ain.set_global("◆ワールド", 3)` and puts
@@ -53,5 +60,5 @@ the world back after.
 
 `skill-payback` (with this mod installed): the window's ERASE of a bought skill, an upgraded one,
 an older purchase, a starting skill with `full` off and on, a starting skill bought again, a mod's
-gift, and `rq.chara.forget` with and without `player`. `loadouts-paths` (with Loadouts too): what a load's erasures give back, a kept
+gift, `rq.chara.forget` with and without `player`, `rq.chara.forget_points` and `erase`. `loadouts-paths` (with Loadouts too): what a load's erasures give back, a kept
 Boost's ERASE with `kept` off and on, and a Boost below rank 4.
