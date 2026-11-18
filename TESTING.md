@@ -56,9 +56,9 @@ would be.
 For a kept Boost outside the third world, the Lab sets `rq.ain.set_global("◆ワールド", 3)` and puts
 the world back after.
 
-## Test Lab
+## Tested in the game
 
-`skill-payback` (with this mod installed): the window's ERASE of a bought skill, an upgraded one,
+The Test Lab's scenario `skill-payback` (with this mod installed): the window's ERASE of a bought skill, an upgraded one,
 an older purchase, a starting skill with `full` off and on, a starting skill bought again, a mod's
 gift, `rq.chara.forget` with and without `player`, `rq.chara.forget_points` and `erase`. `loadouts-paths` (with Loadouts too): what a load's erasures give back, a kept
 Boost's ERASE with `kept` off and on, and a Boost below rank 4.

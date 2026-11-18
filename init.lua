@@ -1,7 +1,7 @@
 -- Skill Removal Payback: ERASE in the skill window gives back the skill points the skill cost.
 -- API reference: https://rq-modding.github.io/rq-modding-docs/reference/
 --
--- What one ERASE gives back (notes/plans/plan-new-mods.md in the workspace, section 1):
+-- What one ERASE gives back:
 --   the bought steps   the purchase record (rq.chara.on_forget's cost, loader 2.45.0). A skill bought
 --                      before that loader has no record: its steps above the starting level
 --                      (rq.chara.base_skills) at the game's price (rq.chara.price), never more than
