@@ -3,6 +3,17 @@
 ERASE in a character's skill window gives back the skill points the skill cost, so trying out a
 build no longer wastes points.
 
+## Showcase
+
+### Removing a Skill and getting Points
+
+<img width="834" height="798" alt="20261118-1239-27 7675108-ezgif com-optimize" src="https://github.com/user-attachments/assets/20cdaaf7-5c9b-46eb-9762-95f06f0a03ed" />
+
+### Mod Options
+
+<img width="1261" height="918" alt="image" src="https://github.com/user-attachments/assets/7059a8fd-f542-4494-b442-249c86753dae" />
+
+
 ## What it changes
 
 - **A skill you bought** gives back every point you paid for it, uses and ranks included. The mod
